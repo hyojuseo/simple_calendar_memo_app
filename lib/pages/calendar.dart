@@ -10,10 +10,19 @@ class Calendar extends StatelessWidget {
       child: Column(
         children: [
           TableCalendar(
+            locale: 'ko-KR',
             focusedDay: DateTime.now(),
             firstDay: DateTime.utc(2010, 10, 20),
             lastDay: DateTime.utc(2040, 10, 20),
           ),
+          // Expanded(
+          //   child: Column(
+          //     children: [
+          //       Container(color: Colors.green),
+          //       Container(color: Colors.grey),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );
