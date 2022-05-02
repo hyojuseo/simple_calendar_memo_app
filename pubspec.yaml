@@ -37,6 +37,10 @@ dependencies:
   get: ^4.6.1
   table_calendar: ^3.0.5
   intl: ^0.17.0
+  flutter_lints: ^1.0.0
+  hive_generator: ^1.1.2
+  build_runner: ^2.1.10
+
 
 dev_dependencies:
   flutter_test:

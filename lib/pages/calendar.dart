@@ -36,15 +36,24 @@ class Calendar extends GetView<CalendarController> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3),
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 3),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text(
-                        '매일 할 일들',
-                        style: TextStyle(color: Colors.black),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            '매일 할일들',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.green,
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -79,15 +88,24 @@ class Calendar extends GetView<CalendarController> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3),
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 5, vertical: 3),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Text(
-                        '할 일들',
-                        style: TextStyle(color: Colors.black),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            '할 일들',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          Icon(
+                            Icons.delete,
+                            color: Colors.green,
+                          ),
+                        ],
                       ),
                     ),
                   );
