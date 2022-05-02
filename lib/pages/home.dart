@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:todo_calendar/components/add_dialog.dart';
 import 'package:todo_calendar/controller/bottom_navi_controller.dart';
 
 const TextStyle _bottomStyle = TextStyle(
@@ -12,18 +13,12 @@ const TextStyle _bottomStyle = TextStyle(
 class Home extends GetView<BottomNavController> {
   Home({Key? key}) : super(key: key);
 
-  // List<Widget> pages = const [
-  //   Text('calendar', style: _bottomStyle),
-  //   Text('memo', style: _bottomStyle),
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Scaffold(
         body: SafeArea(
-          child: controller.changePage(controller
-              .currentIndex.value)!,
+          child: controller.changePage(controller.currentIndex.value)!,
           //pages[controller.currentIndex.value],
         ),
 

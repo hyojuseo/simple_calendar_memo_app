@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:todo_calendar/components/add_dialog.dart';
 
 const TextStyle _titleStyle = TextStyle(
   color: Colors.black,
@@ -10,22 +12,18 @@ const TextStyle _titleStyle = TextStyle(
 class Memo extends StatelessWidget {
   const Memo({Key? key}) : super(key: key);
 
-  Future<void> _addMemo(BuildContext context) {
+  Future<void> _addMemo(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            '메모 추가',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          ),
-          content: TextField(
-            autofocus: true,
-            decoration: const InputDecoration(
-              hintText: '내용을 입력하세요',
-            ),
-            onSubmitted: (String text) {},
-          ),
+        return AddDialog(
+          title: '메모 추가',
+          okCallback: () {
+            Get.back(); //Navigator.of(context).pop();
+          },
+          cancelCallback: (){
+            Get.back();
+          },
         );
       },
     );
