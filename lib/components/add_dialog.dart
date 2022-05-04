@@ -4,6 +4,7 @@ class AddDialog extends StatelessWidget {
   final String? title;
   final Function()? okCallback;
   final Function()? cancelCallback;
+  static TextEditingController? titleTemp;
 
   const AddDialog({
     Key? key,
@@ -14,7 +15,8 @@ class AddDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController contentController = TextEditingController();
+    TextEditingController? contentController = TextEditingController();
+
     return AlertDialog(
       title: Text(
         title!,
@@ -29,7 +31,9 @@ class AddDialog extends StatelessWidget {
           contentPadding: EdgeInsets.only(left: 5, bottom: 10),
           isDense: true,
         ),
-        onSubmitted: (String text) {},
+        onSubmitted: (String? text) {
+          contentController.text = text!;
+        },
       ),
       actions: [
         ElevatedButton(

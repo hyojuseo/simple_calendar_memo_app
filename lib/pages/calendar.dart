@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_calendar/components/add_dialog.dart';
-import 'package:todo_calendar/components/cal_list.dart';
+import 'package:todo_calendar/components/todo_list.dart';
 import 'package:todo_calendar/controller/calendar_controller.dart';
 
 class Calendar extends GetView<CalendarController> {
@@ -11,16 +11,16 @@ class Calendar extends GetView<CalendarController> {
   Widget get line => const Divider(color: Colors.grey);
 
   Widget everyList() {
-    return const CalendarList(
+    return const TodoList(
       text: '매일 할 일',
       content: '매일 할 일들',
     );
   }
 
   Widget selectedDayList() {
-    return const CalendarList(
+    return const TodoList(
       text: '2022-05-05',
-      content: '할 일들',
+      content: '완료된 일들',
     );
   }
 
@@ -73,7 +73,7 @@ class Calendar extends GetView<CalendarController> {
       context: context,
       builder: (context) {
         return AddDialog(
-          title: '할 일 추가',
+          title: '매일 할 일 추가',
           okCallback: () {
             Get.back();
           },

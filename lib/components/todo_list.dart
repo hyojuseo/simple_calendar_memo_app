@@ -6,20 +6,22 @@ const TextStyle _listStyle = TextStyle(
   fontSize: 20,
 );
 
-class CalendarList extends StatelessWidget {
+class TodoList extends StatelessWidget {
   final String? text;
   final String? content;
+  final Function()? delete;
 
-  const CalendarList({
+  const TodoList({
     Key? key,
     required this.text,
     this.content,
+    this.delete,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -32,6 +34,7 @@ class CalendarList extends StatelessWidget {
           const SizedBox(height: 15),
           Expanded(
             child: SingleChildScrollView(
+              controller: ScrollController(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -39,8 +42,7 @@ class CalendarList extends StatelessWidget {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 3),
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 5, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: Colors.grey.withOpacity(0.3),
                         borderRadius: BorderRadius.circular(10),
@@ -48,14 +50,17 @@ class CalendarList extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            //'할 일들',
-                            content!,
-                            style: const TextStyle(color: Colors.black),
+                          //Flexible 줄바꿈
+                          Flexible(
+                            child: Text(
+                              content!,
+                              style: const TextStyle(color: Colors.black),
+                            ),
                           ),
-                          const Icon(
-                            Icons.delete,
-                            color: Colors.green,
+
+                          IconButton(
+                            onPressed: delete,
+                            icon: const Icon(Icons.delete, color: Colors.green),
                           ),
                         ],
                       ),
