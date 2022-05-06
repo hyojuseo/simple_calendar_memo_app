@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:todo_calendar/models/memos.dart';
+import 'package:todo_calendar/models/memodata.dart';
 
 class MemoList extends StatefulWidget {
-  final Memos? memo;
+  final MemoData? memo;
   final Function? onDeleted;
 
   const MemoList({this.memo, this.onDeleted, Key? key}) : super(key: key);

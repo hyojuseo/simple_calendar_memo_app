@@ -1,11 +1,10 @@
 import 'package:hive/hive.dart';
-part 'memos.g.dart';
+part 'memodata.g.dart';
 
 @HiveType(typeId: 0)
-class Memos extends HiveObject{
+class MemoData extends HiveObject{
   @HiveField(0)
   final String? text;
 
-  Memos({this.text});
-
+  MemoData({this.text});
 }
