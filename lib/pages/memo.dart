@@ -49,7 +49,7 @@ class _MemoState extends State<Memo> {
           okCallback: () {
             setState(() {
               HiveHelper()
-                  .create(MemoData(text: AddDialog.contentController!.text));
+                  .memoCreate(MemoData(text: AddDialog.contentController!.text));
             });
             Navigator.of(context).pop();
           },
@@ -64,7 +64,7 @@ class _MemoState extends State<Memo> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<MemoData>>(
-      future: HiveHelper().read(),
+      future: HiveHelper().memoRead(),
       builder: (context, snapshot) {
         List<MemoData> memo = snapshot.data ?? [];
         print('메모 갯수: ${memo.length}');

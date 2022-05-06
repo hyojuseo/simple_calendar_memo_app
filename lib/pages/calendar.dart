@@ -2,26 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_calendar/components/add_dialog.dart';
+import 'package:todo_calendar/components/memo_list.dart';
 import 'package:todo_calendar/components/todo_list.dart';
 import 'package:todo_calendar/controller/calendar_controller.dart';
 
-class Calendar extends GetView<CalendarController> {
+const TextStyle _listStyle = TextStyle(
+  color: Colors.green,
+  fontWeight: FontWeight.bold,
+  fontSize: 20,
+);
+
+class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);
 
+  @override
+  State<Calendar> createState() => _CalendarState();
+}
+
+class _CalendarState extends State<Calendar> {
   Widget get line => const Divider(color: Colors.grey);
 
-  Widget everyList() {
-    return const TodoList(
-      text: '매일 할 일',
-      content: '매일 할 일들',
+  Widget CalTodoList(){
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Text(
+            //임시. 원래는 selectedDay값 들어가야됨.
+            CalendarController.to.today.value.toString(),
+            //controller.selectedDay.value.toString(),
+            style: _listStyle,
+          ),
+          const SizedBox(height: 15),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: ScrollController(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: List.generate(20, (index) {
+                  return TodoList(content: 'sdfasdf');
+                }),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
+  Widget everyList() {
+    return CalTodoList();
+  }
+
   Widget selectedDayList() {
-    return const TodoList(
-      text: '2022-05-05',
-      content: '완료된 일들',
-    );
+    print('sdfgsdfgsdfg');
+    return Container();//MemoList(memo:);
+    // return TodoList(
+    //   //todo: CalData(text: '30', finished: false),
+    //   title: '2022-05-05',
+    //   content: '완료된 일들',
+    // );
   }
 
   Widget _calendar() {
@@ -46,8 +89,8 @@ class Calendar extends GetView<CalendarController> {
       ),
       //선택한 날
       onDaySelected: (selectedDay, focusedDay) {
-        controller.selectedDay.value = selectedDay;
-        controller.focusedDay.value = focusedDay;
+        CalendarController.to.selectedDay.value = selectedDay;
+        CalendarController.to.focusedDay.value = focusedDay;
       },
     );
   }
@@ -107,5 +150,11 @@ class Calendar extends GetView<CalendarController> {
         },
       ),
     );
+    // return FutureBuilder(
+    //     future: context,
+    //     builder: (context, snapshot) {
+    //   List<CalData> todo = snapshot.data ?? [];
+    //
+    // });
   }
 }
