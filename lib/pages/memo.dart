@@ -11,11 +11,16 @@ const TextStyle _titleStyle = TextStyle(
   fontStyle: FontStyle.italic,
 );
 
-class Memo extends StatelessWidget {
+class Memo extends StatefulWidget {
   final Function()? delete;
 
   const Memo({this.delete, Key? key}) : super(key: key);
 
+  @override
+  State<Memo> createState() => _MemoState();
+}
+
+class _MemoState extends State<Memo> {
   Widget _memoList(List<Memos> memos) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -29,16 +34,19 @@ class Memo extends StatelessWidget {
     );
   }
 
-  Future<void> _addMemo(BuildContext context) async {
+  Future<void> _addMemo(BuildContext context, int length) async {
     return showDialog(
       context: context,
       builder: (context) {
         return AddDialog(
           title: '메모 추가',
           okCallback: () {
-            print('내용: ${AddDialog.titleTemp!.text}');
-            HiveHelper().create(Memos(text: AddDialog.titleTemp!.text));
+            print('내용: ${AddDialog.contentController!.text}');
+            setState((){
+              HiveHelper().create(Memos(text: AddDialog.contentController!.text));
+            });
             Navigator.of(context).pop();
+            print('추가후 길이: ${length}');
           },
           cancelCallback: () {
             Navigator.of(context).pop();
@@ -50,11 +58,13 @@ class Memo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int len = 0;
     return FutureBuilder<List<Memos>>(
       future: HiveHelper().read(),
       builder: (context, snapshot) {
         List<Memos> memo = snapshot.data ?? [];
         print('메모 갯수: ${memo.length}');
+        len = memo.length;
 
         return Scaffold(
           appBar: AppBar(
@@ -67,7 +77,7 @@ class Memo extends StatelessWidget {
             backgroundColor: Colors.lightGreen,
             child: const Icon(Icons.add),
             onPressed: () {
-              _addMemo(context);
+              _addMemo(context, len);
             },
           ),
         );
