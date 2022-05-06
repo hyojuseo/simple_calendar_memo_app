@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:todo_calendar/models/memos.dart';
 
-class MemoList extends StatelessWidget {
+class MemoList extends StatefulWidget {
   final Memos? memo;
-  //final int? keyIndex;
+  final Function? onDeleted;
 
-  const MemoList({this.memo, Key? key}) : super(key: key);
+  const MemoList({this.memo, this.onDeleted, Key? key}) : super(key: key);
 
+  @override
+  State<MemoList> createState() => _MemoListState();
+}
+
+class _MemoListState extends State<MemoList> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      key: key,
+      key: widget.key,
       padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 3),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -23,14 +28,15 @@ class MemoList extends StatelessWidget {
           children: [
             Flexible(
               child: Text(
-                memo!.text.toString(),
+                widget.memo!.text.toString(),
                 //'오늘점심밥메뉴는뭘로정할지참고민되는데말입니다.',
                 style: const TextStyle(color: Colors.black),
               ),
             ),
             IconButton(
                 onPressed: () {
-                  memo!.delete();
+                  widget.memo!.delete();
+                  widget.onDeleted!();
                 },
                 icon: const Icon(
                   Icons.delete,

@@ -28,7 +28,13 @@ class _MemoState extends State<Memo> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
         children: List.generate(memos.length, (index) {
-          return MemoList(memo: memos[index], key: Key('${index}'),);
+          return MemoList(
+            memo: memos[index],
+            key: Key('${index}'),
+            onDeleted: () {
+              setState(() {});
+            },
+          );
         }),
       ),
     );
@@ -42,8 +48,9 @@ class _MemoState extends State<Memo> {
           title: '메모 추가',
           okCallback: () {
             print('내용: ${AddDialog.contentController!.text}');
-            setState((){
-              HiveHelper().create(Memos(text: AddDialog.contentController!.text));
+            setState(() {
+              HiveHelper()
+                  .create(Memos(text: AddDialog.contentController!.text));
             });
             Navigator.of(context).pop();
             print('추가후 길이: ${length}');
