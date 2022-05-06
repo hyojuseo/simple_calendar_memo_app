@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:todo_calendar/models/memos.dart';
+import 'package:todo_calendar/models/memodata.dart';
 
 const String MEMO_BOX = 'MEMO_BOX';
 
@@ -12,19 +12,19 @@ class HiveHelper {
 
   HiveHelper._internal();
 
-  Box<Memos>? memoBox;
+  Box<MemoData>? memoBox;
 
   //crud
   Future openBox() async {
     memoBox = await Hive.openBox(MEMO_BOX);
   }
-  Future create(Memos newMemos) async{
+  Future create(MemoData newMemos) async{
     return memoBox!.add(newMemos);
   }
-  Future<List<Memos>> read() async{
+  Future<List<MemoData>> read() async{
     return memoBox!.values.toList();
   }
-  Future update(int index, Memos updatedMemos) async{
+  Future update(int index, MemoData updatedMemos) async{
     memoBox!.putAt(index, updatedMemos);
   }
   Future delete(int index) async{

@@ -5,4 +5,6 @@ class CalendarController extends GetxController{
   Rx selectedDay= DateTime.now().obs;
   Rx focusedDay= DateTime.now().obs;
   Rx sunday = DateTime.sunday.obs;
+  Rx today = DateTime.now().obs;
+
 }

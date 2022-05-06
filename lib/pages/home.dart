@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_calendar/components/add_dialog.dart';
 import 'package:todo_calendar/controller/bottom_navi_controller.dart';
 
 const TextStyle _bottomStyle = TextStyle(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_calendar/components/add_dialog.dart';
 import 'package:todo_calendar/components/memo_list.dart';
 import 'package:todo_calendar/hive_helper.dart';
-import 'package:todo_calendar/models/memos.dart';
+import 'package:todo_calendar/models/memodata.dart';
 
 const TextStyle _titleStyle = TextStyle(
   color: Colors.black,
@@ -21,7 +21,7 @@ class Memo extends StatefulWidget {
 }
 
 class _MemoState extends State<Memo> {
-  Widget _memoList(List<Memos> memos) {
+  Widget _memoList(List<MemoData> memos) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       child: Column(
@@ -40,20 +40,18 @@ class _MemoState extends State<Memo> {
     );
   }
 
-  Future<void> _addMemo(BuildContext context, int length) async {
+  Future<void> _addMemo(BuildContext context) async {
     return showDialog(
       context: context,
       builder: (context) {
         return AddDialog(
           title: '메모 추가',
           okCallback: () {
-            print('내용: ${AddDialog.contentController!.text}');
             setState(() {
               HiveHelper()
-                  .create(Memos(text: AddDialog.contentController!.text));
+                  .create(MemoData(text: AddDialog.contentController!.text));
             });
             Navigator.of(context).pop();
-            print('추가후 길이: ${length}');
           },
           cancelCallback: () {
             Navigator.of(context).pop();
@@ -65,13 +63,11 @@ class _MemoState extends State<Memo> {
 
   @override
   Widget build(BuildContext context) {
-    int len = 0;
-    return FutureBuilder<List<Memos>>(
+    return FutureBuilder<List<MemoData>>(
       future: HiveHelper().read(),
       builder: (context, snapshot) {
-        List<Memos> memo = snapshot.data ?? [];
+        List<MemoData> memo = snapshot.data ?? [];
         print('메모 갯수: ${memo.length}');
-        len = memo.length;
 
         return Scaffold(
           appBar: AppBar(
@@ -84,7 +80,7 @@ class _MemoState extends State<Memo> {
             backgroundColor: Colors.lightGreen,
             child: const Icon(Icons.add),
             onPressed: () {
-              _addMemo(context, len);
+              _addMemo(context);
             },
           ),
         );
