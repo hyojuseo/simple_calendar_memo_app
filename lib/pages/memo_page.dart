@@ -11,16 +11,16 @@ const TextStyle _titleStyle = TextStyle(
   fontStyle: FontStyle.italic,
 );
 
-class Memo extends StatefulWidget {
+class MemoPage extends StatefulWidget {
   final Function()? delete;
 
-  const Memo({this.delete, Key? key}) : super(key: key);
+  const MemoPage({this.delete, Key? key}) : super(key: key);
 
   @override
-  State<Memo> createState() => _MemoState();
+  State<MemoPage> createState() => _MemoPageState();
 }
 
-class _MemoState extends State<Memo> {
+class _MemoPageState extends State<MemoPage> {
   Widget _memoList(List<MemoData> memos) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,

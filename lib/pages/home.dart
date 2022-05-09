@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_calendar/controller/bottom_navi_controller.dart';
 
-const TextStyle _bottomStyle = TextStyle(
-  fontSize: 30,
-  fontWeight: FontWeight.bold,
-  letterSpacing: 3,
-  fontStyle: FontStyle.italic,
-);
-
 class Home extends GetView<BottomNavController> {
   Home({Key? key}) : super(key: key);
 
