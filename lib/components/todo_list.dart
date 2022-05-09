@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:todo_calendar/models/caldata.dart';
 
-
 class TodoList extends StatefulWidget {
   final CalData? todo;
-  final String? content;
-  final Function()? delete;
+  final Function? onDeleted;
 
   const TodoList({
     Key? key,
     this.todo,
-    this.content,
-    this.delete,
+    this.onDeleted,
   }) : super(key: key);
 
   @override
@@ -26,29 +23,39 @@ class _TodoListState extends State<TodoList> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 5),
         decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.3),
+          color: widget.todo!.finished
+              ? Colors.grey.withOpacity(0.3)
+              : Colors.greenAccent,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Row(
-          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Checkbox(
                 key: widget.key,
-                value: false,
+                value: widget.todo!.finished,
                 onChanged: (checked) {
-                  //widget.todo!.finished = checked!;
-                  //setState(() {});
+                  widget.todo!.finished = checked!;
+                  widget.todo!.save();
+                  setState(() {});
                 }),
             //Flexible 줄바꿈
             Flexible(
               child: Text(
-                widget.content!,
-                style: const TextStyle(color: Colors.black),
+                widget.todo!.text.toString(),
+                style: TextStyle(
+                    color: Colors.black,
+                    decoration: widget.todo!.finished
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none),
               ),
             ),
             const SizedBox(width: 10),
             IconButton(
-              onPressed: widget.delete,
+              onPressed: () {
+                widget.todo!.delete();
+                widget.onDeleted!();
+              },
               icon: const Icon(Icons.delete, color: Colors.green),
             ),
           ],

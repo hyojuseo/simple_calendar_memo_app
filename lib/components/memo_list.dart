@@ -38,10 +38,7 @@ class _MemoListState extends State<MemoList> {
                   widget.memo!.delete();
                   widget.onDeleted!();
                 },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.green,
-                )),
+                icon: const Icon(Icons.delete, color: Colors.green)),
           ],
         ),
       ),
