@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:todo_calendar/pages/calendar.dart';
-import 'package:todo_calendar/pages/memo.dart';
+import 'package:todo_calendar/pages/calendar_page.dart';
+import 'package:todo_calendar/pages/memo_page.dart';
 
 enum PageName { CALENDAR, MEMO }
 
@@ -14,9 +14,9 @@ class BottomNavController extends GetxController {
     var page = PageName.values[value];
     switch(page){
       case PageName.CALENDAR:
-        return const Calendar();
+        return const CalendarPage();
       case PageName.MEMO:
-        return const Memo();
+        return const MemoPage();
     }
   }
 }
