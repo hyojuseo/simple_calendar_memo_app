@@ -35,11 +35,9 @@ class _CalendarPageState extends State<CalendarPage> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Obx(() => Text(
+            //'Every Todo'
                 DateFormat('yyyy년 MM월 dd일')
                     .format(CalendarController.to.selectedDay.value),
-                //임시. 원래는 selectedDay값 들어가야됨.
-                //DateFormat('yyyy년 MM월 dd일').format(CalendarController.to.today.value),
-                //controller.selectedDay.value.toString(),
                 style: _listStyle,
               )),
           const SizedBox(height: 15),
