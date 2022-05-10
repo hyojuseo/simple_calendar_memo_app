@@ -25,48 +25,45 @@ class _CalendarPageState extends State<CalendarPage> {
   Widget get line => const Divider(color: Colors.grey);
   late List<CalData> todo;
 
-  Widget calTodoList() {
-    return FutureBuilder<List<CalData>>(
-        future: HiveHelper().calRead(),
-        builder: (context, snapshot) {
-          todo = snapshot.data ?? [];
-          print('todo 갯수:${todo.length}');
+  void update() => setState(() {});
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  //임시. 원래는 selectedDay값 들어가야됨.
-                  DateFormat('yyyy년 MM월 dd일').format(CalendarController.to.today.value),
-                  //controller.selectedDay.value.toString(),
-                  style: _listStyle,
-                ),
-                const SizedBox(height: 15),
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: ScrollController(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: List.generate(todo.length, (index) {
-                        return TodoList(
-                          todo: todo[index],
-                          key: Key('${index}'),
-                          onDeleted: () {
-                            setState(() {});
-                          },
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-              ],
+  Widget calTodoList() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Obx(() => Text(
+                DateFormat('yyyy년 MM월 dd일')
+                    .format(CalendarController.to.selectedDay.value),
+                //임시. 원래는 selectedDay값 들어가야됨.
+                //DateFormat('yyyy년 MM월 dd일').format(CalendarController.to.today.value),
+                //controller.selectedDay.value.toString(),
+                style: _listStyle,
+              )),
+          const SizedBox(height: 15),
+          Expanded(
+            child: SingleChildScrollView(
+              controller: ScrollController(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: List.generate(todo.length, (index) {
+                  return TodoList(
+                    todo: todo[index],
+                    key: Key('${index}'),
+                    onDeleted: () {
+                      setState(() {});
+                    },
+                  );
+                }),
+              ),
             ),
-          );
-        });
+          ),
+        ],
+      ),
+    );
   }
 
   Widget selectedDayList() {
@@ -117,25 +114,32 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            const Calendar(),
-            line,
-            Expanded(
-              child: _todoList(),
-            )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.lightGreen,
-        child: const Icon(Icons.add),
-        onPressed: () {
-          _addTodo(context);
-        },
-      ),
-    );
+    return FutureBuilder<List<CalData>>(
+        future: HiveHelper().calRead(),
+        builder: (context, snapshot) {
+          todo = snapshot.data ?? [];
+          print('todo 갯수:${todo.length}');
+
+          return Scaffold(
+            body: SafeArea(
+              child: Column(
+                children: [
+                  const Calendar(),
+                  line,
+                  Expanded(
+                    child: _todoList(),
+                  )
+                ],
+              ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.lightGreen,
+              child: const Icon(Icons.add),
+              onPressed: () {
+                _addTodo(context);
+              },
+            ),
+          );
+        });
   }
 }

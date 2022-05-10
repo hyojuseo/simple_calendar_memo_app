@@ -67,7 +67,6 @@ class _MemoPageState extends State<MemoPage> {
       future: HiveHelper().memoRead(),
       builder: (context, snapshot) {
         List<MemoData> memo = snapshot.data ?? [];
-        print('메모 갯수: ${memo.length}');
 
         return Scaffold(
           appBar: AppBar(
