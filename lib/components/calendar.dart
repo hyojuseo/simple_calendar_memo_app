@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:todo_calendar/controller/calendar_controller.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({Key? key}) : super(key: key);
@@ -10,21 +11,12 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  late var _selectedDay;
-  late var _focusedDay;
-
-  @override
-  void initState() {
-     _selectedDay = DateTime.now();
-     _focusedDay = DateTime.now();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
       locale: 'ko-KR',
-      focusedDay: _focusedDay,
+      focusedDay: CalendarController.to.focusedDay.value,
       firstDay: DateTime.utc(2010, 10, 20),
       lastDay: DateTime.utc(2040, 10, 20),
 
@@ -55,29 +47,19 @@ class _CalendarState extends State<Calendar> {
       //선택한 날
       onDaySelected: (selectedDay, focusedDay) {
         setState(() {
-          _selectedDay = selectedDay;
-          _focusedDay = focusedDay;
+          CalendarController.to.selectedDay.value = selectedDay;
+          print(CalendarController.to.selectedDay.value = selectedDay);
+          CalendarController.to.focusedDay.value = focusedDay;
         });
       },
       selectedDayPredicate: (day) {
-        return isSameDay(_selectedDay, day);
+        return isSameDay(CalendarController.to.selectedDay.value, day);
       },
 
       onPageChanged: (focusedDay){
-        _focusedDay= focusedDay;
+        CalendarController.to.focusedDay.value = focusedDay;
       },
-      // calendarBuilders: CalendarBuilders(dowBuilder: (context, day) {
-      //   if (day.weekday == DateTime.sunday) {
-      //     final text = DateFormat.E().format(day);
-      //
-      //     return Center(
-      //       child: Text(
-      //         text,
-      //         style: TextStyle(color: Colors.red),
-      //       ),
-      //     );
-      //   }
-      // }),
+
     );
   }
 }
