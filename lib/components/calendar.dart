@@ -13,9 +13,11 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   late Map<DateTime, List<dynamic>> _events;
+  var checkType;
 
   @override
   void initState() {
+    checkType = CalendarController.to.checkType;
     _events = {};
     super.initState();
   }
@@ -29,7 +31,7 @@ class _CalendarState extends State<Calendar> {
         width: 18,
         height: 18,
         decoration:
-            const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
+        const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
         child: const Icon(
           Icons.done,
           color: Colors.white,
@@ -37,10 +39,6 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
     );
-  }
-
-  Widget doing() {
-    return Container();
   }
 
   Widget dont() {
@@ -52,12 +50,21 @@ class _CalendarState extends State<Calendar> {
         width: 18,
         height: 18,
         decoration:
-            const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+        const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
         child: const Icon(
           Icons.clear,
           color: Colors.white,
           size: 15,
         ),
+      ),
+    );
+  }
+
+  Widget weekdayStyle(String text, Color color) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(color: color),
       ),
     );
   }
@@ -75,9 +82,10 @@ class _CalendarState extends State<Calendar> {
         formatButtonVisible: false, //2주단위보기 버튼 비활성화
       ),
       daysOfWeekHeight: 30,
+
       calendarStyle: const CalendarStyle(
-        //다음달의 표시여부
-        outsideDaysVisible: true,
+        //다음달 이전달의 표시여부
+        outsideDaysVisible: false,
         //평일날짜 색상
         defaultTextStyle: TextStyle(color: Colors.black),
         //주말날짜 색상
@@ -88,10 +96,21 @@ class _CalendarState extends State<Calendar> {
           shape: BoxShape.circle,
         ),
         selectedDecoration: BoxDecoration(
-          color: Colors.blueAccent,
+          color: Colors.lightBlueAccent,
           shape: BoxShape.circle,
         ),
       ),
+
+      onDayLongPressed: (datetime, events){
+        checkType[datetime] = checkType[datetime] ?? 0;
+        if(checkType[datetime] >= 2){
+          checkType[datetime] = 0;
+        } else{
+          checkType[datetime]++;
+        }
+        print(checkType[datetime]);
+        setState(() {});
+      },
 
       //선택한 날
       onDaySelected: (selectedDay, focusedDay) {
@@ -108,12 +127,34 @@ class _CalendarState extends State<Calendar> {
         CalendarController.to.focusedDay.value = focusedDay;
       },
 
-      calendarBuilders:
-          CalendarBuilders(markerBuilder: (context, datetime, events) {
-        if (_events[datetime] == null) {
-          return done();
-        }
-      }),
+      //eventLoader는 반환형이 List Type이라서 Image를 넣고싶기때문에 이를 사용하지않았다.
+      // eventLoader: (day){
+      //   if(_events[day] != null) return ['sdf'];
+      //   return [];
+      // },
+
+      calendarBuilders: CalendarBuilders(
+        markerBuilder: (context, datetime, events) {
+          switch(checkType[datetime]){
+            case 1:
+              return done();
+            case 2:
+              print('builder에서의 = ${checkType[datetime]}');
+              return dont();
+          }
+          // if (_events[datetime] == null) {
+          //   return done();
+          // }
+        },
+        dowBuilder: (context, day) {
+          switch (day.weekday) {
+            case 6:
+              return weekdayStyle('토', Colors.blueAccent);
+            case 7:
+              return weekdayStyle('일', Colors.red);
+          }
+        },
+      ),
     );
   }
 }
