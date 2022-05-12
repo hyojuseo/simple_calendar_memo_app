@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:todo_calendar/components/add_dialog.dart';
 import 'package:todo_calendar/components/calendar.dart';
 import 'package:todo_calendar/components/todo_list.dart';
-import 'package:todo_calendar/controller/calendar_controller.dart';
 import 'package:todo_calendar/hive_helper.dart';
-import 'package:todo_calendar/models/caldata.dart';
+import 'package:todo_calendar/models/tododata.dart';
 
 const TextStyle _listStyle = TextStyle(
   color: Colors.green,
@@ -23,70 +21,54 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   Widget get line => const Divider(color: Colors.grey);
-  late List<CalData> todo;
+  late List<TodoData> todo;
+  var cal;
 
   void update() => setState(() {});
 
   Widget calTodoList() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Obx(() => Text(
-            //'Every Todo'
-                DateFormat('yyyy년 MM월 dd일')
-                    .format(CalendarController.to.selectedDay.value),
-                style: _listStyle,
-              )),
-          const SizedBox(height: 15),
-          Expanded(
-            child: SingleChildScrollView(
-              controller: ScrollController(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: List.generate(todo.length, (index) {
-                  return TodoList(
-                    todo: todo[index],
-                    key: Key('${index}'),
-                    onDeleted: () {
-                      setState(() {});
-                    },
-                  );
-                }),
-              ),
+    return FutureBuilder<List<TodoData>>(
+        future: HiveHelper().todoRead(),
+        builder: (context, snapshot) {
+          todo = snapshot.data ?? [];
+          // print('todo 갯수:${todo.length}');
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text(
+                  'Every Todo',
+                  //     DateFormat('yyyy년 MM월 dd일')
+                  //         .format(CalendarController.to.selectedDay.value),
+                  style: _listStyle,
+                ),
+                const SizedBox(height: 15),
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: ScrollController(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: List.generate(todo.length, (index) {
+                        return TodoList(
+                          todo: todo[index],
+                          //cal: cal,
+                          key: Key('${index}'),
+                          onDeleted: () {
+                            setState(() {});
+                          },
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget selectedDayList() {
-    return Container(); //MemoList(memo:);
-    // return TodoList(
-    //   //todo: CalData(text: '30', finished: false),
-    //   title: '2022-05-05',
-    //   content: '완료된 일들',
-    // );
-  }
-
-  Widget _todoList() {
-    return Row(
-      children: [
-        Expanded(child: selectedDayList()),
-
-        VerticalDivider(
-          color: Colors.grey.withOpacity(0.3),
-          thickness: 1,
-        ),
-
-        Expanded(child: calTodoList()),
-        //Colors.orange)),
-      ],
-    );
+          );
+        });
   }
 
   Future<void> _addTodo(BuildContext context) async {
@@ -97,8 +79,8 @@ class _CalendarPageState extends State<CalendarPage> {
           title: '매일 할 일 추가',
           okCallback: () {
             setState(() {
-              HiveHelper()
-                  .calCreate(CalData(text: AddDialog.contentController!.text));
+              HiveHelper().todoCreate(
+                  TodoData(text: AddDialog.contentController!.text));
             });
             Navigator.of(context).pop();
           },
@@ -112,20 +94,18 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<CalData>>(
+    return FutureBuilder(
         future: HiveHelper().calRead(),
         builder: (context, snapshot) {
-          todo = snapshot.data ?? [];
-          print('todo 갯수:${todo.length}');
-
+          cal = snapshot.data ?? {};
           return Scaffold(
             body: SafeArea(
               child: Column(
                 children: [
-                   Calendar(),
+                  Calendar(cal: cal),
                   line,
                   Expanded(
-                    child: _todoList(),
+                    child: calTodoList(),
                   )
                 ],
               ),

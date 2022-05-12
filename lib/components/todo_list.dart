@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:todo_calendar/controller/calendar_controller.dart';
 import 'package:todo_calendar/models/caldata.dart';
+import 'package:todo_calendar/models/tododata.dart';
 
 class TodoList extends StatefulWidget {
-  final CalData? todo;
+  final TodoData? todo;
   final Function? onDeleted;
 
   const TodoList({
@@ -16,6 +18,14 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
+  var taskStatTemp = CalendarController.to.taskStateTemp;
+
+  @override
+  void initState() {
+    taskStatTemp = {};
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(

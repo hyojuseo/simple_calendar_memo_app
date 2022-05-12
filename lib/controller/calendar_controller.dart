@@ -5,6 +5,9 @@ class CalendarController extends GetxController{
   Rx selectedDay = DateTime.now().obs;
   Rx focusedDay = DateTime.now().obs;
   Rx today = DateTime.now().obs;
-  RxMap<DateTime, int> checkType = <DateTime, int>{}.obs;
+
+  //calData temp
+  Map<DateTime, List<dynamic>> eventsTemp = <DateTime, List<dynamic>>{};
+  Map<DateTime, int> taskStateTemp = <DateTime, int>{};
 
 }

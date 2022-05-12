@@ -66,13 +66,13 @@ class HiveHelper {
 
   Future calCreate(DateTime dateTime, int state) async {
     String formatDate = DateFormat('yyyy-MM-dd').format(dateTime).toString();
-    print('datetime: ${formatDate},\n state: ${state}');
+    // print('datetime: ${formatDate},\n state: ${calBox!.get(formatDate)}');
     calBox!.put(formatDate, state);
-    print('calbox: ${calBox!.keys}');
-    //calBox!.put(dateTime, state);
+    // print('calBoxKey: ${calBox!.keys}');
   }
 
   Future calRead() async {
+    print('read에서의 calBox: ${calBox!.keys}');
     return calBox!.toMap();
   }
 
@@ -80,7 +80,8 @@ class HiveHelper {
     calBox!.putAt(index, updatedCal);
   }
 
-  Future calDelete(int index) async {
-    calBox!.deleteAt(index);
+  Future calDelete(DateTime dateTime) async {
+    String formatDate = DateFormat('yyyy-MM-dd').format(dateTime).toString();
+    calBox!.delete(formatDate);
   }
 }

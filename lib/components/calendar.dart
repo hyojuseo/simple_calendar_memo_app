@@ -1,63 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 //import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_calendar/controller/calendar_controller.dart';
+import 'package:todo_calendar/hive_helper.dart';
+import 'package:todo_calendar/models/caldata.dart';
 
 class Calendar extends StatefulWidget {
-  const Calendar({Key? key}) : super(key: key);
+  final Map<dynamic, dynamic>? cal;
+
+  const Calendar({Key? key, this.cal}) : super(key: key);
 
   @override
   State<Calendar> createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> {
-  late Map<DateTime, List<dynamic>> _events;
-  var checkType;
 
-  @override
-  void initState() {
-    checkType = CalendarController.to.checkType;
-    _events = {};
-    super.initState();
+  Widget work(Color color, IconData icon) {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 35,
+      child: Container(
+        width: 18,
+        height: 18,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        child: Icon(
+          icon,
+          // Icons.done,
+          color: Colors.white,
+          size: 15,
+        ),
+      ),
+    );
   }
 
   Widget done() {
-    return Positioned(
-      bottom: 0,
-      right: 0,
-      left: 35,
-      child: Container(
-        width: 18,
-        height: 18,
-        decoration:
-        const BoxDecoration(color: Colors.blue, shape: BoxShape.circle),
-        child: const Icon(
-          Icons.done,
-          color: Colors.white,
-          size: 15,
-        ),
-      ),
-    );
+    return work(Colors.blue, Icons.done);
   }
 
   Widget dont() {
-    return Positioned(
-      bottom: 0,
-      right: 0,
-      left: 35,
-      child: Container(
-        width: 18,
-        height: 18,
-        decoration:
-        const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-        child: const Icon(
-          Icons.clear,
-          color: Colors.white,
-          size: 15,
-        ),
-      ),
-    );
+    return work(Colors.red, Icons.clear);
   }
 
   Widget weekdayStyle(String text, Color color) {
@@ -101,15 +86,17 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
 
-      onDayLongPressed: (datetime, events){
-        checkType[datetime] = checkType[datetime] ?? 0;
-        if(checkType[datetime] >= 2){
-          checkType[datetime] = 0;
-        } else{
-          checkType[datetime]++;
+      onDayLongPressed: (datetime, events) {
+        String date = DateFormat('yyyy-MM-dd').format(datetime).toString();
+        widget.cal![date] = widget.cal![date] ?? 0;
+        if (widget.cal![date]! >= 2) {
+          widget.cal![date] = 0;
+        } else {
+          widget.cal![date] = widget.cal![date]! + 1;
         }
-        print(checkType[datetime]);
-        setState(() {});
+        setState(() {
+          HiveHelper().calCreate(datetime, widget.cal![date]);
+        });
       },
 
       //선택한 날
@@ -135,16 +122,12 @@ class _CalendarState extends State<Calendar> {
 
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, datetime, events) {
-          switch(checkType[datetime]){
+          switch (widget.cal![DateFormat('yyyy-MM-dd').format(datetime).toString()]) {
             case 1:
               return done();
             case 2:
-              print('builder에서의 = ${checkType[datetime]}');
               return dont();
           }
-          // if (_events[datetime] == null) {
-          //   return done();
-          // }
         },
         dowBuilder: (context, day) {
           switch (day.weekday) {
