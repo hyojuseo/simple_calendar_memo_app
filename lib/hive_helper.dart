@@ -1,56 +1,86 @@
 import 'package:hive/hive.dart';
+import 'package:intl/intl.dart';
+import 'package:todo_calendar/controller/calendar_controller.dart';
 import 'package:todo_calendar/models/caldata.dart';
+import 'package:todo_calendar/models/tododata.dart';
 import 'package:todo_calendar/models/memodata.dart';
 
 const String MEMO_BOX = 'MEMO_BOX';
+const String TODO_BOX = 'TODO_BOX';
 const String CAL_BOX = 'CAL_BOX';
 
 class HiveHelper {
   static final HiveHelper _singleton = HiveHelper._internal();
 
-  factory HiveHelper(){
+  factory HiveHelper() {
     return _singleton;
   }
 
   HiveHelper._internal();
 
   Box<MemoData>? memoBox;
-  Box<CalData>? calBox;
+  Box<TodoData>? todoBox;
+  Box? calBox;
 
   Future openBox() async {
     memoBox = await Hive.openBox(MEMO_BOX);
+    todoBox = await Hive.openBox(TODO_BOX);
     calBox = await Hive.openBox(CAL_BOX);
   }
 
-
   //memo crud
-  Future memoCreate(MemoData newMemo) async{
+  Future memoCreate(MemoData newMemo) async {
     return memoBox!.add(newMemo);
   }
-  Future<List<MemoData>> memoRead() async{
+
+  Future<List<MemoData>> memoRead() async {
     return memoBox!.values.toList();
   }
-  Future memoUpdate(int index, MemoData updatedMemo) async{
+
+  Future memoUpdate(int index, MemoData updatedMemo) async {
     memoBox!.putAt(index, updatedMemo);
   }
-  Future memoDelete(int index) async{
+
+  Future memoDelete(int index) async {
     memoBox!.deleteAt(index);
   }
 
-
-  //cal_todo crud
-  Future calCreate(CalData newTodo) async{
-    return calBox!.add(newTodo);
+  //todo crud
+  Future todoCreate(TodoData newTodo) async {
+    return todoBox!.add(newTodo);
   }
 
-  Future<List<CalData>> calRead() async{
-    return calBox!.values.toList();
+  Future<List<TodoData>> todoRead() async {
+    return todoBox!.values.toList();
   }
-  Future calUpdate(int index, CalData updatedTodo) async{
-    calBox!.putAt(index, updatedTodo);
+
+  Future todoUpdate(int index, TodoData updatedTodo) async {
+    todoBox!.putAt(index, updatedTodo);
   }
-  Future calDelete(int index) async{
+
+  Future todoDelete(int index) async {
+    todoBox!.deleteAt(index);
+  }
+
+
+
+  Future calCreate(DateTime dateTime, int state) async {
+    String formatDate = DateFormat('yyyy-MM-dd').format(dateTime).toString();
+    print('datetime: ${formatDate},\n state: ${state}');
+    calBox!.put(formatDate, state);
+    print('calbox: ${calBox!.keys}');
+    //calBox!.put(dateTime, state);
+  }
+
+  Future calRead() async {
+    return calBox!.toMap();
+  }
+
+  Future calUpdate(int index, CalData updatedCal) async {
+    calBox!.putAt(index, updatedCal);
+  }
+
+  Future calDelete(int index) async {
     calBox!.deleteAt(index);
   }
-
 }

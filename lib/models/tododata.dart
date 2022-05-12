@@ -1,14 +1,14 @@
 import 'package:hive/hive.dart';
-part 'caldata.g.dart';
+part 'tododata.g.dart';
 
 @HiveType(typeId: 0)
-class CalData extends HiveObject{
+class TodoData extends HiveObject{
   @HiveField(0)
   final String? text;
   @HiveField(1)
   bool finished;
 
-  CalData({required this.text, this.finished = false});
+  TodoData({required this.text, this.finished = false});
 }
 
 // class CalData{
