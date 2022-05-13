@@ -10,10 +10,3 @@ class TodoData extends HiveObject{
 
   TodoData({required this.text, this.finished = false});
 }
-
-// class CalData{
-//   final String? text;
-//   bool finished = false;
-//
-//   CalData({this.text, this.finished = false});
-// }

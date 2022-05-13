@@ -4,7 +4,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:todo_calendar/binding/init_bindings.dart';
 import 'package:todo_calendar/hive_helper.dart';
-import 'package:todo_calendar/models/caldata.dart';
 import 'package:todo_calendar/models/tododata.dart';
 import 'package:todo_calendar/models/memodata.dart';
 import 'package:todo_calendar/pages/home.dart';
@@ -13,7 +12,6 @@ void main() async{
   await Hive.initFlutter();
   Hive.registerAdapter(MemoDataAdapter());
   Hive.registerAdapter(TodoDataAdapter());
-  Hive.registerAdapter(CalDataAdapter());
   await HiveHelper().openBox();
 
   initializeDateFormatting().then((_) => runApp(const MyApp()));

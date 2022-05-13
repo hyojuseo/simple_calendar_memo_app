@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:todo_calendar/controller/calendar_controller.dart';
-import 'package:todo_calendar/models/caldata.dart';
 import 'package:todo_calendar/models/tododata.dart';
 
 class TodoList extends StatefulWidget {

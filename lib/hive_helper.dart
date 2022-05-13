@@ -1,7 +1,5 @@
 import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
-import 'package:todo_calendar/controller/calendar_controller.dart';
-import 'package:todo_calendar/models/caldata.dart';
 import 'package:todo_calendar/models/tododata.dart';
 import 'package:todo_calendar/models/memodata.dart';
 
@@ -76,7 +74,7 @@ class HiveHelper {
     return calBox!.toMap();
   }
 
-  Future calUpdate(int index, CalData updatedCal) async {
+  Future calUpdate(int index, Map<dynamic, dynamic> updatedCal) async {
     calBox!.putAt(index, updatedCal);
   }
 
