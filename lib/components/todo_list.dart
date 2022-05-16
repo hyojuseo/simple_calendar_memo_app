@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:todo_calendar/controller/calendar_controller.dart';
+import 'package:todo_calendar/controller/todo_controller.dart';
 import 'package:todo_calendar/models/tododata.dart';
 
 class TodoList extends StatefulWidget {
   final TodoData? todo;
   final Function? onDeleted;
+  final int? index;
 
   const TodoList({
     Key? key,
     this.todo,
     this.onDeleted,
+    this.index,
   }) : super(key: key);
 
   @override
@@ -17,16 +19,12 @@ class TodoList extends StatefulWidget {
 }
 
 class _TodoListState extends State<TodoList> {
-  var taskStatTemp = CalendarController.to.taskStateTemp;
-
-  @override
-  void initState() {
-    taskStatTemp = {};
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    // widget.todo!.finished =
+    //     (TodoController.to.reset.value == true) ? false : widget.todo!.finished;
+
+    print('value: ${TodoController.to.reset.value}');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Container(
