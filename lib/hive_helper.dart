@@ -56,6 +56,7 @@ class HiveHelper {
     todoBox!.putAt(index, updatedTodo);
   }
 
+
   Future todoDelete(int index) async {
     todoBox!.deleteAt(index);
   }
