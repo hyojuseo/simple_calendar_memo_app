@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:todo_calendar/components/add_dialog.dart';
 import 'package:todo_calendar/components/calendar.dart';
 import 'package:todo_calendar/components/todo_list.dart';
+import 'package:todo_calendar/controller/todo_controller.dart';
 import 'package:todo_calendar/hive_helper.dart';
 import 'package:todo_calendar/models/tododata.dart';
 
@@ -24,48 +25,72 @@ class _CalendarPageState extends State<CalendarPage> {
   late List<TodoData> todo;
   var cal;
 
-  void update() => setState(() {});
+  Widget calTodo() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Every Todo',
+                style: _listStyle,
+              ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(primary: Colors.green),
+                  onPressed: () {
+                    TodoController.to.reset.value = true;
+                    setState(() {});
+                  },
+                  child: const Text(
+                    'reset',
+                    style: TextStyle(color: Colors.white, fontSize: 15),
+                  ))
+            ],
+          ),
+          const SizedBox(height: 15),
+          Expanded(
+            child: calTodoList(),
+          ),
+        ],
+      ),
+    );
+  }
 
   Widget calTodoList() {
+    print('===========fff');
     return FutureBuilder<List<TodoData>>(
         future: HiveHelper().todoRead(),
         builder: (context, snapshot) {
           todo = snapshot.data ?? [];
           // print('todo 갯수:${todo.length}');
+          TodoController.to.length.value = todo.length;
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+          return SingleChildScrollView(
+            controller: ScrollController(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  'Every Todo',
-                  //     DateFormat('yyyy년 MM월 dd일')
-                  //         .format(CalendarController.to.selectedDay.value),
-                  style: _listStyle,
-                ),
-                const SizedBox(height: 15),
-                Expanded(
-                  child: SingleChildScrollView(
-                    controller: ScrollController(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: List.generate(todo.length, (index) {
-                        return TodoList(
-                          todo: todo[index],
-                          //cal: cal,
-                          key: Key('${index}'),
-                          onDeleted: () {
-                            setState(() {});
-                          },
-                        );
-                      }),
-                    ),
-                  ),
-                ),
-              ],
+              children: List.generate(todo.length, (index) {
+                //초기화했을때의 값을 변경해준것을 업데이트해준다.
+                //if문을 실행하고 return을 실행하기때문에
+                //TodoList의 widget.todo!.save()가 이후에 체크한것을 저장한다.
+                if (TodoController.to.reset.value == true) {
+                  todo[index].finished = false;
+                  HiveHelper().todoUpdate(index, todo[index]);
+                }
+                return TodoList(
+                  todo: todo[index],
+                  key: Key('${index}'),
+                  index: index,
+                  onDeleted: () {
+                    setState(() {});
+                  },
+                );
+              }),
             ),
           );
         });
@@ -105,7 +130,7 @@ class _CalendarPageState extends State<CalendarPage> {
                   Calendar(cal: cal),
                   line,
                   Expanded(
-                    child: calTodoList(),
+                    child: calTodo(),
                   )
                 ],
               ),
