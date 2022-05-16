@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:todo_calendar/controller/todo_controller.dart';
 import 'package:todo_calendar/models/tododata.dart';
 
 class TodoList extends StatefulWidget {
@@ -21,10 +20,6 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
-    // widget.todo!.finished =
-    //     (TodoController.to.reset.value == true) ? false : widget.todo!.finished;
-
-    print('value: ${TodoController.to.reset.value}');
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Container(

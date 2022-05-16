@@ -61,13 +61,10 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   Widget calTodoList() {
-    print('===========fff');
     return FutureBuilder<List<TodoData>>(
         future: HiveHelper().todoRead(),
         builder: (context, snapshot) {
           todo = snapshot.data ?? [];
-          // print('todo 갯수:${todo.length}');
-          TodoController.to.length.value = todo.length;
 
           return SingleChildScrollView(
             controller: ScrollController(),
