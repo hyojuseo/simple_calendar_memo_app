@@ -15,7 +15,6 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-
   Widget work(Color color, IconData icon) {
     return Positioned(
       bottom: 0,
@@ -89,12 +88,13 @@ class _CalendarState extends State<Calendar> {
         widget.cal![date] = widget.cal![date] ?? 0;
         if (widget.cal![date]! >= 2) {
           widget.cal![date] = 0;
+          HiveHelper().calDelete(datetime);
+          print('실행?');
         } else {
           widget.cal![date] = widget.cal![date]! + 1;
-        }
-        setState(() {
           HiveHelper().calCreate(datetime, widget.cal![date]);
-        });
+        }
+        setState(() {});
       },
 
       //선택한 날
@@ -120,10 +120,13 @@ class _CalendarState extends State<Calendar> {
 
       calendarBuilders: CalendarBuilders(
         markerBuilder: (context, datetime, events) {
-          switch (widget.cal![DateFormat('yyyy-MM-dd').format(datetime).toString()]) {
+          switch (widget
+              .cal![DateFormat('yyyy-MM-dd').format(datetime).toString()]) {
             case 1:
+              print('do');
               return done();
             case 2:
+              print('dont');
               return dont();
           }
         },
