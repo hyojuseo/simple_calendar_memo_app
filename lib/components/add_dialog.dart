@@ -35,9 +35,11 @@ class _AddDialogState extends State<AddDialog> {
           contentPadding: EdgeInsets.only(left: 5, bottom: 10),
           isDense: true,
         ),
-        onSubmitted: (String text) {
-          AddDialog.contentController!.text = text;
-        },
+        // onSubmitted: (String text) {
+        //   AddDialog.contentController!.text = text;
+        //   FocusScope.of(context).unfocus();
+        // },
+        textInputAction: TextInputAction.send,
       ),
       actions: [
         ElevatedButton(

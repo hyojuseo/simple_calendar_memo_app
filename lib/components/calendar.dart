@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'package:table_calendar/table_calendar.dart';
 import 'package:todo_calendar/controller/calendar_controller.dart';
 import 'package:todo_calendar/hive_helper.dart';
+import 'package:vibration/vibration.dart';
 
 class Calendar extends StatefulWidget {
   final Map<dynamic, dynamic>? cal;
@@ -89,12 +89,12 @@ class _CalendarState extends State<Calendar> {
         if (widget.cal![date]! >= 2) {
           widget.cal![date] = 0;
           HiveHelper().calDelete(datetime);
-          print('실행?');
         } else {
           widget.cal![date] = widget.cal![date]! + 1;
           HiveHelper().calCreate(datetime, widget.cal![date]);
         }
         setState(() {});
+        Vibration.vibrate(duration: 50, amplitude: 80);
       },
 
       //선택한 날
@@ -123,10 +123,8 @@ class _CalendarState extends State<Calendar> {
           switch (widget
               .cal![DateFormat('yyyy-MM-dd').format(datetime).toString()]) {
             case 1:
-              print('do');
               return done();
             case 2:
-              print('dont');
               return dont();
           }
         },

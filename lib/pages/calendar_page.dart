@@ -2,16 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:todo_calendar/components/add_dialog.dart';
 import 'package:todo_calendar/components/calendar.dart';
-import 'package:todo_calendar/components/todo_list.dart';
-import 'package:todo_calendar/controller/todo_controller.dart';
+import 'package:todo_calendar/controller/calendar_controller.dart';
 import 'package:todo_calendar/hive_helper.dart';
 import 'package:todo_calendar/models/tododata.dart';
-
-const TextStyle _listStyle = TextStyle(
-  color: Colors.green,
-  fontWeight: FontWeight.bold,
-  fontSize: 20,
-);
+import 'package:todo_calendar/pages/todo_page.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({Key? key}) : super(key: key);
@@ -22,76 +16,7 @@ class CalendarPage extends StatefulWidget {
 
 class _CalendarPageState extends State<CalendarPage> {
   Widget get line => const Divider(color: Colors.grey);
-  late List<TodoData> todo;
   var cal;
-
-  Widget calTodo() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Every Todo',
-                style: _listStyle,
-              ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(primary: Colors.green),
-                  onPressed: () {
-                    TodoController.to.reset.value = true;
-                    setState(() {});
-                  },
-                  child: const Text(
-                    'reset',
-                    style: TextStyle(color: Colors.white, fontSize: 15),
-                  ))
-            ],
-          ),
-          const SizedBox(height: 15),
-          Expanded(
-            child: calTodoList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget calTodoList() {
-    return FutureBuilder<List<TodoData>>(
-        future: HiveHelper().todoRead(),
-        builder: (context, snapshot) {
-          todo = snapshot.data ?? [];
-
-          return SingleChildScrollView(
-            controller: ScrollController(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: List.generate(todo.length, (index) {
-                //초기화했을때의 값을 변경해준것을 업데이트해준다.
-                //if문을 실행하고 return을 실행하기때문에
-                //TodoList의 widget.todo!.save()가 이후에 체크한것을 저장한다.
-                if (TodoController.to.reset.value == true) {
-                  todo[index].finished = false;
-                  HiveHelper().todoUpdate(index, todo[index]);
-                }
-                return TodoList(
-                  todo: todo[index],
-                  key: Key('${index}'),
-                  index: index,
-                  onDeleted: () {
-                    setState(() {});
-                  },
-                );
-              }),
-            ),
-          );
-        });
-  }
 
   Future<void> _addTodo(BuildContext context) async {
     return showDialog(
@@ -125,9 +50,23 @@ class _CalendarPageState extends State<CalendarPage> {
               child: Column(
                 children: [
                   Calendar(cal: cal),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.lightGreen),
+                    onPressed: () {
+                      setState(() {
+                        CalendarController.to.focusedDay.value = DateTime.now();
+                        CalendarController.to.selectedDay.value =
+                            DateTime.now();
+                      });
+                    },
+                    child: const Text(
+                      'Today',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                   line,
                   Expanded(
-                    child: calTodo(),
+                    child: TodoPage(),
                   )
                 ],
               ),
